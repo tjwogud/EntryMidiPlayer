@@ -13,6 +13,7 @@ namespace EntryMidiPlayer
         static void Main(string[] args)
         {
             string[] noteTypes = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
+            int limit = 361;
 
             Console.Write("파일 이름을 입력하세요: ");
             string path = Console.ReadLine();
@@ -23,6 +24,7 @@ namespace EntryMidiPlayer
             List<string> notes = new List<string>();
             List<MidiEvent> events = midi.Events.SelectMany(_ => _).ToList();
             long max = 0;
+            List<long> realTimes = new List<long>();
             double lastRealTime = 0;
             double lastAbsoluteTime = 0;
             double currentMicroSecondsPerTick = 0;
@@ -39,6 +41,7 @@ namespace EntryMidiPlayer
                     int octave = e1.NoteNumber / 12 - 1;
                     string noteType = noteTypes[e1.NoteNumber % 12];
                     long time = (long)(lastRealTime / 1000);
+                    realTimes.Add(time);
                     notes.Add(noteType + Math.Min(Math.Max(octave, 1), 7) + ":" + time);
                     if (max < time)
                         max = time;
@@ -50,7 +53,15 @@ namespace EntryMidiPlayer
                 }
             }
 
-            string result = notes.Count + "," + (max + 1000) + "|" + string.Join(",", notes) + ",end";
+            long noteLength = 2000;
+            for (int i = limit; i < realTimes.Count; i++)
+            {
+                long l = realTimes[i - limit] + 2000 - realTimes[i] - 100;
+                if (l > 0)
+                    noteLength -= l;
+            }
+
+            string result = noteLength + "," + (max + 1000) + "|" + string.Join(",", notes) + ",end";
 
             Clipboard.SetText(result);
             Console.WriteLine("\r완료!\t\t\t");
