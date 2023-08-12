@@ -55,6 +55,9 @@ namespace EntryMidiPlayer
             Clipboard.SetText(result);
             Console.WriteLine("\r완료!\t\t\t");
             Console.WriteLine("복사되었습니다.");
+            Console.WriteLine();
+            Console.Write("엔터 키를 눌러 종료 . . .");
+            Console.Read();
         }
     }
 }
