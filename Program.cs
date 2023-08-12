@@ -53,12 +53,12 @@ namespace EntryMidiPlayer
                 }
             }
 
-            long noteLength = 2000;
+            int noteLength = 2000;
             for (int i = limit; i < realTimes.Count; i++)
             {
-                long l = realTimes[i - limit] + 2000 - realTimes[i] - 100;
-                if (l > 0)
-                    noteLength -= l;
+                int j = (int)(realTimes[i - limit] + 2000 - realTimes[i] - 100);
+                if (j > 0)
+                    noteLength -= j;
             }
 
             string result = noteLength + "," + (max + 1000) + "|" + string.Join(",", notes) + ",end";
